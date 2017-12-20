@@ -107,4 +107,8 @@ public abstract class AbstractWxHandler implements WxHandlerApi{
     public WxOutMsg shortvideo(WxInMsg msg) {
         return defaultMsg(msg);
     }
+
+    public boolean check(String token, String signature, String timestamp, String nonce) {
+        return WeiXinUtils.check(token, signature, timestamp, nonce);
+    }
 }
