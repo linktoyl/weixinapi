@@ -7,6 +7,7 @@ import cn.vitco.wx.entity.WxAccessToken;
 import cn.vitco.wx.entity.WxPayment;
 import cn.vitco.wx.entity.WxRedPack;
 import cn.vitco.wx.entity.WxResContent;
+import cn.vitco.wx.util.WxMap;
 import com.alibaba.fastjson.JSONObject;
 import redis.clients.jedis.JedisCluster;
 
@@ -24,10 +25,12 @@ public class Tester {
     public static void main(String[] args) {
         //JedisClusterFactory fac = new JedisClusterFactory();
         //fac.getJedisCluster().del("accessToken@accessToken");
-        /*VitcoWxApi wxapi = new VitcoWxApi();
+        VitcoWxApi wxapi = new VitcoWxApi();
         WxResContent wxat =  wxapi.user_info("o3XrQw6NdLPA821Nt7_lnQgv9SP8");
-        System.out.println(JSONObject.toJSON(wxat));*/
-        VitcoWxApi wxApi = new VitcoWxApi();
+        System.out.println(JSONObject.toJSON(wxat));
+        WxMap wxat1 =  wxapi.genJsSDKConfig("fdsfsd");
+        System.out.println(JSONObject.toJSON(wxat1));
+       // VitcoWxApi wxApi = new VitcoWxApi();
         //wxApi.send_redpack(WX_API_CONFIG.getPayKey(), genWxRedPack(), WX_API_CONFIG.getCertUrl(), WX_API_CONFIG.getMchid());
         //--1450326002201712121625357215
        /* Map<String, Object> map = new HashMap<String, Object>();
@@ -40,13 +43,13 @@ public class Tester {
         wxApi.query_redpackRecode(WX_API_CONFIG.getPayKey(), map, WX_API_CONFIG.getCertUrl(), WX_API_CONFIG.getMchid());*/
         //wxApi.pay_transfers(WX_API_CONFIG.getPayKey(), genWxPayment(), WX_API_CONFIG.getCertUrl(), WX_API_CONFIG.getMchid());
         //1450326002201712121706369279
-        Map<String, Object> map = new HashMap<String, Object>();
+        /*Map<String, Object> map = new HashMap<String, Object>();
         String noncestr = getRandomStringByLength(20);// 随机字符串
         map.put("nonce_str", noncestr);
         map.put("partner_trade_no", "1450326002201712121706369279");
         map.put("appid", WX_API_CONFIG.getAppid());
         map.put("mch_id", WX_API_CONFIG.getMchid());
-        wxApi.query_transfers(WX_API_CONFIG.getPayKey(), map, WX_API_CONFIG.getCertUrl(), WX_API_CONFIG.getMchid());
+        wxApi.query_transfers(WX_API_CONFIG.getPayKey(), map, WX_API_CONFIG.getCertUrl(), WX_API_CONFIG.getMchid());*/
     }
 
     public static WxPayment genWxPayment(){

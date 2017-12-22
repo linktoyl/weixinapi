@@ -62,6 +62,23 @@ public abstract class AbstractWxApi implements WxApi {
      */
     @Override
     public WxResContent user_info(String openid) {
+        WxResContent wxres = user_info_safe(openid);
+        if(wxres.errcode()==40001){
+            synchronized (lock) {
+                try {
+                    reflushAccessToken();
+                } catch (IllegalArgumentException e) {
+                    log.error("刷新JsapiTicket出错:"+e.getMessage());
+                } catch (HttpException e) {
+                    log.error("刷新JsapiTicket出错[网络问题]:"+e.getMessage());
+                }
+            }
+            wxres = user_info_safe(openid);
+        }
+        return wxres;
+    }
+
+    private WxResContent user_info_safe(String openid){
         WxRequest req = new WxRequest(WX_API_URL.WX_GET_USERINFO, METHOD.GET);
         WxMap params = new WxMap();
         params.put("access_token", getAccessToken());
@@ -238,9 +255,9 @@ public abstract class AbstractWxApi implements WxApi {
                 try {
                     reflushJsapiTicket();
                 } catch (IllegalArgumentException e) {
-                    log.error("刷新AccessToken出错:"+e.getMessage());
+                    log.error("刷新JsapiTicket出错:"+e.getMessage());
                 } catch (HttpException e) {
-                    log.error("刷新AccessToken出错[网络问题]:"+e.getMessage());
+                    log.error("刷新JsapiTicket出错[网络问题]:"+e.getMessage());
                 }
                 jt = jsapiTicketStore.get();
             }
@@ -259,9 +276,9 @@ public abstract class AbstractWxApi implements WxApi {
                 try {
                     reflushAccessToken();
                 } catch (IllegalArgumentException e) {
-                    log.error("刷新JsapiTicket出错:"+e.getMessage());
+                    log.error("刷新AccessToken出错:"+e.getMessage());
                 } catch (HttpException e) {
-                    log.error("刷新JsapiTicket出错[网络问题]:"+e.getMessage());
+                    log.error("刷新AccessToken出错[网络问题]:"+e.getMessage());
                 }
                 at = accessTokenStore.get();
             }

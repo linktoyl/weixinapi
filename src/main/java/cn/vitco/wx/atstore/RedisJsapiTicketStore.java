@@ -73,11 +73,11 @@ public class RedisJsapiTicketStore implements WxJsapiTicketStoreApi {
         }
         finally {
             // jedisPool.returnResource(jedis); //这是老版本归还连接的方法 已经deprecated
-            try {
+            /*try {
                 jedisCluster.close();// 2.9.0的方法直接close
             } catch (IOException e) {
                 e.printStackTrace();
-            }
+            }*/
         }
         return null;
     }
@@ -103,11 +103,11 @@ public class RedisJsapiTicketStore implements WxJsapiTicketStoreApi {
             e.printStackTrace();
         }
         finally {
-            try {
+            /*try {
                 jedisCluster.close();
             } catch (IOException e) {
                 e.printStackTrace();
-            }
+            }*/
         }
 
     }

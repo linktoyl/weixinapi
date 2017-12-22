@@ -6,5 +6,7 @@ package cn.vitco.wx;
  */
 public class VitcoWxHandler extends AbstractWxHandler {
 
+    public VitcoWxHandler(){
 
+    }
 }
