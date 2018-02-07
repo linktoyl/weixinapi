@@ -3,6 +3,7 @@ package cn.vitco.wx;
 import cn.vitco.cache.redis.JedisClusterFactory;
 import cn.vitco.common.Lang;
 import cn.vitco.common.Xmls;
+import cn.vitco.wx.aes.WxBizDataCrypt;
 import cn.vitco.wx.api.WxAccessTokenStoreApi;
 import cn.vitco.wx.api.WxApi;
 import cn.vitco.wx.api.WxJsapiTicketStoreApi;
@@ -20,6 +21,7 @@ import cn.vitco.wx.http.WxResponse;
 import cn.vitco.wx.util.WxMap;
 import cn.vitco.wx.util.WxPaySSL;
 import cn.vitco.wx.util.WxPaySign;
+import net.sf.json.JSONObject;
 import org.apache.http.HttpException;
 import org.apache.log4j.Logger;
 
@@ -29,6 +31,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Map;
 
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -78,6 +81,24 @@ public abstract class AbstractWxApi implements WxApi {
         return wxres;
     }
 
+    private WxResContent user_info_safe(String openid){
+        WxRequest req = new WxRequest(WX_API_URL.WX_GET_USERINFO, METHOD.GET);
+        WxMap params = new WxMap();
+        params.put("access_token", getAccessToken());
+        params.put("openid", openid);
+        req.setParams(params);
+        WxResponse resp = null;
+        try {
+            resp = req.send();
+        } catch (HttpException e) {
+            log.error("获取用户信息异常:"+openid, e.getCause());
+        }
+        if (resp == null || !resp.isOK()) {
+            return null;
+        }
+        return WxResContent.format(resp.getContent("utf-8"));
+    }
+
     /**
      *  微信小程序
      * 登录凭证 code 获取 session_key 和 openid
@@ -100,23 +121,34 @@ public abstract class AbstractWxApi implements WxApi {
 
     }
 
-    private WxResContent user_info_safe(String openid){
-        WxRequest req = new WxRequest(WX_API_URL.WX_GET_USERINFO, METHOD.GET);
-        WxMap params = new WxMap();
-        params.put("access_token", getAccessToken());
-        params.put("openid", openid);
-        req.setParams(params);
-        WxResponse resp = null;
-        try {
-            resp = req.send();
-        } catch (HttpException e) {
-            log.error("获取用户信息异常:"+openid, e.getCause());
+    /**
+     * 解析微信小程序数据
+     * @param sessionKey
+     * @param encryptedData
+     * @param iv
+     * @return
+     * @throws WxException
+     */
+    public WxMap wx_mini_data_decrypt(String sessionKey, String encryptedData, String iv) throws WxException{
+        WxBizDataCrypt dataCrypt = new WxBizDataCrypt(sessionKey);
+        String result = dataCrypt.decryptData(encryptedData, iv);
+        WxMap wxMap = new WxMap();
+        JSONObject json = JSONObject.fromObject(result);
+        if(json != null){
+            JSONObject watermark = (JSONObject) json.remove("watermark");
+            String appid = watermark.getString("appid");
+            if(!appid.equals(WX_API_CONFIG.getAppid()))
+                throw new WxException("解密数据与设置的AppID匹配失败!");
+            Set<Map.Entry> ens = json.entrySet();
+            for (Map.Entry en: ens) {
+                wxMap.put(en.getKey().toString(), en.getValue().toString());
+            }
+            return wxMap;
         }
-        if (resp == null || !resp.isOK()) {
-            return null;
-        }
-        return WxResContent.format(resp.getContent("utf-8"));
+        throw new WxException("微信小程序数据解密失败!");
     }
+
+
 
     /**
      * 发送红包
