@@ -1,6 +1,8 @@
 package cn.vitco.common;
 
 import java.nio.charset.Charset;
+import java.util.Random;
+import java.util.UUID;
 
 /**
  * 字符串工具类
@@ -176,6 +178,11 @@ public class Strings {
         if (r == last)
             return cs.toString();
         return cs.subSequence(0, r + 1).toString();
+    }
+
+    public static String genGuid(){
+        UUID uuid = UUID.randomUUID();
+        return uuid.toString().replaceAll("-","");
     }
 
 }
