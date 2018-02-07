@@ -22,4 +22,6 @@ public class WX_API_URL {
 
     public final static String WX_DOWNLOAD_MEDIA = "http://file.api.weixin.qq.com/cgi-bin/media/get?access_token=%s&media_id=%s";
 
+    public final static String WX_MINI_LOGIN = "https://api.weixin.qq.com/sns/jscode2session?appid=%s&secret=%s&js_code=%s&grant_type=authorization_code";
+
 }

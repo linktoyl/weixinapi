@@ -78,6 +78,28 @@ public abstract class AbstractWxApi implements WxApi {
         return wxres;
     }
 
+    /**
+     *  微信小程序
+     * 登录凭证 code 获取 session_key 和 openid
+     * @param code
+     * @return
+     */
+    public WxResContent wx_mini_login(String code){
+        String url = String.format(WX_API_URL.WX_MINI_LOGIN, WX_API_CONFIG.getAppid(), WX_API_CONFIG.getAppsecret(), code);
+        WxRequest req = new WxRequest(url, METHOD.GET);
+        WxResponse resp = null;
+        try {
+            resp = req.send();
+        } catch (HttpException e) {
+            log.error("微信小程序登录凭证 code 获取 session_key 和 openid异常:"+code, e.getCause());
+        }
+        if (resp == null || !resp.isOK()) {
+            return null;
+        }
+        return WxResContent.format(resp.getContent("utf-8"));
+
+    }
+
     private WxResContent user_info_safe(String openid){
         WxRequest req = new WxRequest(WX_API_URL.WX_GET_USERINFO, METHOD.GET);
         WxMap params = new WxMap();

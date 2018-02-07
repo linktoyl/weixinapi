@@ -1,6 +1,5 @@
 package cn.vitco.wx.api;
 
-import cn.vitco.wx.util.WxMap;
 
 /**
  * Created by Sterling on 2017/12/11.
