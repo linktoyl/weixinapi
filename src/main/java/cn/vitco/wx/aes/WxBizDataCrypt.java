@@ -26,7 +26,9 @@ public class WxBizDataCrypt {
 
     private static void initialize(){
         if (initialized) return;
-        Security.addProvider(new BouncyCastleProvider());
+        if (Security.getProvider(BouncyCastleProvider.PROVIDER_NAME) == null){
+            Security.addProvider(new BouncyCastleProvider());
+        }
         initialized = true;
     }
 
@@ -53,10 +55,11 @@ public class WxBizDataCrypt {
      */
     public String decryptData(String encryptedData, String iv) throws WxException{
         initialize();
-        byte[] sessionKeyBy = Base64.decode(sessionKey);
-        byte[] encryptedDataBy = Base64.decode(encryptedData);
-        byte[] ivByte = Base64.decode(iv);
+
         try {
+            byte[] sessionKeyBy = Base64.decode(sessionKey);
+            byte[] encryptedDataBy = Base64.decode(encryptedData);
+            byte[] ivByte = Base64.decode(iv);
             Cipher cipher = Cipher.getInstance(ALGORITHM_STR);
             Key sKeySpec = new SecretKeySpec(sessionKeyBy, KEY_ALGORITHM);
             // 初始化
