@@ -4,7 +4,10 @@ import cn.vitco.wx.entity.WxInMsg;
 import cn.vitco.wx.entity.WxOutMsg;
 
 /**
- * Created by Sterling on 2017/12/20.
+ * 微信消息处理接口
+ * @author Sterling 【linktoyl@163.com】
+ * @date 2018/3/14 21:30
+ *
  */
 public interface WxHandlerApi {
     boolean check(String token, String signature, String timestamp, String nonce);

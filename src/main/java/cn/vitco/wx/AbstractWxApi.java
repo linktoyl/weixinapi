@@ -390,4 +390,124 @@ public abstract class AbstractWxApi implements WxApi {
         int expires = re.getInt("expires_in") - 200;// 微信默认超时为7200秒，此处设置稍微短一点
         accessTokenStore.save(token, expires, System.currentTimeMillis());
     }
+
+    @Override
+    public WxResContent setIndustry(String industry1, String industry2) {
+        String accessToken = getAccessToken();
+        String url = String.format(WX_API_URL.WX_TEMPLATE_SET_INDUSTRY, accessToken);
+        WxRequest req = new WxRequest(url, METHOD.POST);
+        WxMap params = new WxMap();
+        params.put("industry_id1", industry1);
+        params.put("industry_id2", industry2);
+        try {
+            log.info(params.toString());
+            req.setData("{'industry_id1'='21', 'industry_id2'='2'}".getBytes("utf-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        WxResponse resp = null;
+        try {
+            resp = req.send();
+            log.info(resp.getContent());
+        } catch (HttpException e) {
+            log.error("设置账号所属行业信息异常", e.getCause());
+        }
+        return null;
+    }
+
+    @Override
+    public WxResContent getIndustry() {
+        String accessToken = getAccessToken();
+        String url = String.format(WX_API_URL.WX_TEMPLATE_GET_INDUSTRY, accessToken);
+        WxRequest req = new WxRequest(url, METHOD.GET);
+        WxResponse resp = null;
+        try {
+            resp = req.send();
+        } catch (HttpException e) {
+            log.error("获取帐号设置的行业信息异常", e.getCause());
+        }
+        return WxResContent.format(resp.getContent("utf-8"));
+    }
+
+    @Override
+    public WxResContent addTemplateShortId(String template_id_short) {
+        if(template_id_short == null || template_id_short.isEmpty())
+            return null;
+        String accessToken = getAccessToken();
+        String url = String.format(WX_API_URL.WX_TEMPLATE_ADD_SHORT_ID, accessToken);
+        WxRequest req = new WxRequest(url, METHOD.POST);
+
+        WxResponse resp = null;
+        try {
+            JSONObject param = new JSONObject();
+            param.put("template_id_short", template_id_short);
+            req.setData(param.toString().getBytes("utf-8"));
+            resp = req.send();
+            log.info(resp.getContent());
+        } catch (HttpException e) {
+            log.error("从行业模板库选择模板到帐号后台异常", e.getCause());
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return WxResContent.format(resp.getContent("utf-8"));
+    }
+
+    @Override
+    public WxResContent getTemplateList() {
+        String accessToken = getAccessToken();
+        String url = String.format(WX_API_URL.WX_TEMPLATE_ALL_LIST, accessToken);
+        WxRequest req = new WxRequest(url, METHOD.GET);
+        WxResponse resp = null;
+        try {
+            resp = req.send();
+        } catch (HttpException e) {
+            log.error("获取模板列表信息异常", e.getCause());
+        }
+        return WxResContent.format(resp.getContent("utf-8"));
+    }
+
+    @Override
+    public WxResContent delTemplate(String template_id) {
+        if(template_id == null || template_id.isEmpty())
+            return null;
+        String accessToken = getAccessToken();
+        String url = String.format(WX_API_URL.WX_TEMPLATE_DEL, accessToken);
+        WxRequest req = new WxRequest(url, METHOD.POST);
+
+        WxResponse resp = null;
+        try {
+            JSONObject param = new JSONObject();
+            param.put("template_id", template_id);
+            req.setData(param.toString().getBytes("utf-8"));
+            resp = req.send();
+            log.info(resp.getContent());
+        } catch (HttpException e) {
+            log.error("删除模板信息异常", e.getCause());
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return WxResContent.format(resp.getContent("utf-8"));
+    }
+
+    @Override
+    public WxResContent sendTemplateMsg(TemplateMsgData tempData) {
+        if(tempData == null)
+            return null;
+        String accessToken = getAccessToken();
+        String url = String.format(WX_API_URL.WX_TEMPLATE_SEND, accessToken);
+        WxRequest req = new WxRequest(url, METHOD.POST);
+
+        WxResponse resp = null;
+        try {
+            log.info(tempData.toString());
+            req.setData(tempData.toString().getBytes("utf-8"));
+            resp = req.send();
+            log.info(resp.getContent());
+        } catch (HttpException e) {
+            log.error("设置账号所属行业信息异常", e.getCause());
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return WxResContent.format(resp.getContent("utf-8"));
+    }
 }

@@ -2,9 +2,12 @@ package cn.vitco.wx.api;
 
 
 /**
- * Created by Sterling on 2017/12/11.
+ * 微信API
+ * @author Sterling 【linktoyl@163.com】
+ * @date 2018/3/14 21:30
+ *
  */
-public interface WxApi extends WxDataApi, WxMediaApi, WxPayApi, WxUserApi, WxAccessTokenApi, WxJsapiTicketApi{
+public interface WxApi extends WxTemplateMsg, WxDataApi, WxMediaApi, WxPayApi, WxUserApi, WxAccessTokenApi, WxJsapiTicketApi{
 
 
 }

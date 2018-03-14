@@ -5,8 +5,9 @@ import org.apache.http.HttpException;
 
 /**
  * 微信登录相关接口
+ * @author Sterling 【linktoyl@163.com】
+ * @date 2018/3/14 21:31
  *
- * Created by Sterling on 2017/12/11.
  */
 public interface WxLoginApi {
     /**

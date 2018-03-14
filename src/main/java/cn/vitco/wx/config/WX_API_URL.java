@@ -1,27 +1,61 @@
 package cn.vitco.wx.config;
 
 /**
- * Created by Sterling on 2017/12/11.
+ * 微信API接口  URL地址
+ * @author Sterling 【linktoyl@163.com】
+ * @date 2018/3/14 21:04
+ *
  */
 public class WX_API_URL {
 
+    /**
+     * 微信公众号 授权
+     */
     public final static String WX_OAUTH_ACCESSTOKEN = "https://api.weixin.qq.com/sns/oauth2/access_token";
-
     public final static String WX_OAUTH_USERINFO = "https://api.weixin.qq.com/sns/userinfo";
 
+    /**
+     * 微信用户信息
+     */
     public final static String WX_GET_USERINFO = "https://api.weixin.qq.com/cgi-bin/user/info";
 
+    /**
+     * 微信公众号 accesstoken 和 jsapiticket
+     */
     public final static String WX_GET_ACCESSTOKEN = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=%s&secret=%s";
     public final static String WX_GET_JSAPITICKET = "https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=%s&type=jsapi";
 
+    /**
+     * 微信商户平台 企业付款接口
+     */
     public final static String WX_PAY_TRANSFERS = "https://api.mch.weixin.qq.com/mmpaymkttransfers/promotion/transfers";
     public final static String WX_QUERY_TRANSFERS = "https://api.mch.weixin.qq.com/mmpaymkttransfers/gettransferinfo";
 
+    /**
+     * 微信商户平台 红包接口
+     */
     public final static String WX_QUERY_REDPACK = "https://api.mch.weixin.qq.com/mmpaymkttransfers/gethbinfo";
     public final static String WX_PAY_REDPACK = "https://api.mch.weixin.qq.com/mmpaymkttransfers/sendredpack";
 
+    /**
+     * 微信公众号 媒体API
+     */
     public final static String WX_DOWNLOAD_MEDIA = "http://file.api.weixin.qq.com/cgi-bin/media/get?access_token=%s&media_id=%s";
 
+    /**
+     * 模板消息API URL
+     */
+    public final static String WX_TEMPLATE_SET_INDUSTRY = "https://api.weixin.qq.com/cgi-bin/template/api_set_industry?access_token=%s";
+    public final static String WX_TEMPLATE_GET_INDUSTRY = "https://api.weixin.qq.com/cgi-bin/template/get_industry?access_token=%s";
+    public final static String WX_TEMPLATE_ADD_SHORT_ID = "https://api.weixin.qq.com/cgi-bin/template/api_add_template?access_token=%s";
+    public final static String WX_TEMPLATE_ALL_LIST = "https://api.weixin.qq.com/cgi-bin/template/get_all_private_template?access_token=%s";
+    public final static String WX_TEMPLATE_DEL = "https://api.weixin.qq.com/cgi-bin/template/del_private_template?access_token=%s";
+    public final static String WX_TEMPLATE_SEND = "https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=%s";
+
+
+    /**
+     * 微信小程序 登录
+     */
     public final static String WX_MINI_LOGIN = "https://api.weixin.qq.com/sns/jscode2session?appid=%s&secret=%s&js_code=%s&grant_type=authorization_code";
 
 }

@@ -10,8 +10,9 @@ import java.util.Map;
 
 /**
  * 微信支付相关接口
+ * @author Sterling 【linktoyl@163.com】
+ * @date 2018/3/14 21:32
  *
- * Created by Sterling on 2017/12/11.
  */
 public interface WxPayApi {
     WxMap send_redpack(String key, WxRedPack wxRedPack, String certfile, String password) throws WxException;

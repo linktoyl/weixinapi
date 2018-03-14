@@ -3,10 +3,7 @@ package cn.vitco;
 import cn.vitco.cache.redis.JedisClusterFactory;
 import cn.vitco.wx.VitcoWxApi;
 import cn.vitco.wx.config.WX_API_CONFIG;
-import cn.vitco.wx.entity.WxAccessToken;
-import cn.vitco.wx.entity.WxPayment;
-import cn.vitco.wx.entity.WxRedPack;
-import cn.vitco.wx.entity.WxResContent;
+import cn.vitco.wx.entity.*;
 import cn.vitco.wx.util.WxMap;
 import com.alibaba.fastjson.JSONObject;
 import redis.clients.jedis.JedisCluster;
@@ -23,33 +20,36 @@ import java.util.Random;
 public class Tester {
 
     public static void main(String[] args) {
-        //JedisClusterFactory fac = new JedisClusterFactory();
-        //fac.getJedisCluster().del("accessToken@accessToken");
         VitcoWxApi wxapi = new VitcoWxApi();
-        WxResContent wxat =  wxapi.user_info("o3XrQw6NdLPA821Nt7_lnQgv9SP8");
-        System.out.println(JSONObject.toJSON(wxat));
-        WxMap wxat1 =  wxapi.genJsSDKConfig("fdsfsd");
-        System.out.println(JSONObject.toJSON(wxat1));
-       // VitcoWxApi wxApi = new VitcoWxApi();
-        //wxApi.send_redpack(WX_API_CONFIG.getPayKey(), genWxRedPack(), WX_API_CONFIG.getCertUrl(), WX_API_CONFIG.getMchid());
-        //--1450326002201712121625357215
-       /* Map<String, Object> map = new HashMap<String, Object>();
-        String noncestr = getRandomStringByLength(20);// 随机字符串
-        map.put("nonce_str", noncestr);
-        map.put("mch_billno", "1450326002201712121625357215");
-        map.put("mch_id", WX_API_CONFIG.getMchid());
-        map.put("appid", WX_API_CONFIG.getAppid());
-        map.put("bill_type", "MCHT");
-        wxApi.query_redpackRecode(WX_API_CONFIG.getPayKey(), map, WX_API_CONFIG.getCertUrl(), WX_API_CONFIG.getMchid());*/
-        //wxApi.pay_transfers(WX_API_CONFIG.getPayKey(), genWxPayment(), WX_API_CONFIG.getCertUrl(), WX_API_CONFIG.getMchid());
-        //1450326002201712121706369279
-        /*Map<String, Object> map = new HashMap<String, Object>();
-        String noncestr = getRandomStringByLength(20);// 随机字符串
-        map.put("nonce_str", noncestr);
-        map.put("partner_trade_no", "1450326002201712121706369279");
-        map.put("appid", WX_API_CONFIG.getAppid());
-        map.put("mch_id", WX_API_CONFIG.getMchid());
-        wxApi.query_transfers(WX_API_CONFIG.getPayKey(), map, WX_API_CONFIG.getCertUrl(), WX_API_CONFIG.getMchid());*/
+
+        TemplateMsgData template = new TemplateMsgData();
+        template.setTouser("o3XrQw6NdLPA821Nt7_lnQgv9SP8");
+        template.setTemplate_id("iPItszYei9mEAYWwnjOJZLRaZCMu-uXpoTtjBjpl8yM");
+        TemplateMsgData.DataLabel first = template.new DataLabel("您6月5日开具的发票，中了2018年3月1日重庆市国税局第1期二次摇奖的的三等奖");
+        TemplateMsgData.DataLabel remark = template.new DataLabel("请于60日内到市国家税务局指定的X地领取奖金，逾期未兑视为放弃。详情请咨询纳税服务热线12366。");
+        TemplateMsgData.Data data = template.new Data(first, remark);
+        TemplateMsgData.DataLabel keynote1 = template.new DataLabel("\n150000000000");
+        TemplateMsgData.DataLabel keynote2 = template.new DataLabel("00000001");
+        TemplateMsgData.DataLabel keynote3 = template.new DataLabel("三等奖");
+        TemplateMsgData.DataLabel keynote4 = template.new DataLabel("2万元");
+        data.setKeynotes(keynote1,keynote2,keynote3,keynote4);
+        template.setData(data);
+
+        log(template.toString());
+
+
+
+
+        WxResContent res1 = wxapi.sendTemplateMsg(template);
+
+        log(res1.toString());
+        WxResContent res = wxapi.getTemplateList();
+
+        log(res.toString());
+    }
+
+    public static void log(String str){
+        System.out.println(str);
     }
 
     public static WxPayment genWxPayment(){
@@ -126,5 +126,36 @@ public class Tester {
             sb.append(base.charAt(number));
         }
         return sb.toString();
+    }
+
+    public static void test(){
+        //JedisClusterFactory fac = new JedisClusterFactory();
+        //fac.getJedisCluster().del("accessToken@accessToken");
+        VitcoWxApi wxapi = new VitcoWxApi();
+        WxResContent wxat =  wxapi.user_info("o3XrQw6NdLPA821Nt7_lnQgv9SP8");
+        System.out.println(JSONObject.toJSON(wxat));
+        WxMap wxat1 =  wxapi.genJsSDKConfig("fdsfsd");
+        System.out.println(JSONObject.toJSON(wxat1));
+        // VitcoWxApi wxApi = new VitcoWxApi();
+        //wxApi.send_redpack(WX_API_CONFIG.getPayKey(), genWxRedPack(), WX_API_CONFIG.getCertUrl(), WX_API_CONFIG.getMchid());
+        //--1450326002201712121625357215
+       /* Map<String, Object> map = new HashMap<String, Object>();
+        String noncestr = getRandomStringByLength(20);// 随机字符串
+        map.put("nonce_str", noncestr);
+        map.put("mch_billno", "1450326002201712121625357215");
+        map.put("mch_id", WX_API_CONFIG.getMchid());
+        map.put("appid", WX_API_CONFIG.getAppid());
+        map.put("bill_type", "MCHT");
+        wxApi.query_redpackRecode(WX_API_CONFIG.getPayKey(), map, WX_API_CONFIG.getCertUrl(), WX_API_CONFIG.getMchid());*/
+        //wxApi.pay_transfers(WX_API_CONFIG.getPayKey(), genWxPayment(), WX_API_CONFIG.getCertUrl(), WX_API_CONFIG.getMchid());
+        //1450326002201712121706369279
+        /*Map<String, Object> map = new HashMap<String, Object>();
+        String noncestr = getRandomStringByLength(20);// 随机字符串
+        map.put("nonce_str", noncestr);
+        map.put("partner_trade_no", "1450326002201712121706369279");
+        map.put("appid", WX_API_CONFIG.getAppid());
+        map.put("mch_id", WX_API_CONFIG.getMchid());
+        wxApi.query_transfers(WX_API_CONFIG.getPayKey(), map, WX_API_CONFIG.getCertUrl(), WX_API_CONFIG.getMchid());*/
+
     }
 }

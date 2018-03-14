@@ -65,7 +65,7 @@ public class WxResContent extends WxMap {
         try {
             WxResContent resp = new WxResContent();
             JSONObject json = JSONObject.fromObject(jsonStr);
-            Map<String, Object> tmpMap = (Map<String, Object>) JSONObject.toBean(json, Map.class);
+            Map<String, Object> tmpMap = json;
             resp.putAll(tmpMap);
             return resp;
         } catch (Exception e) {

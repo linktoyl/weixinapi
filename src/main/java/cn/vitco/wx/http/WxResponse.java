@@ -90,15 +90,16 @@ public class WxResponse {
 
 
     public String getContent() {
-        if (Strings.isBlank(content)) {
-            content = getContent(null);
-        }
-        return content;
+        return getContent(null);
     }
 
     public String getContent(String charsetName) {
-        if (charsetName == null)
-            return Streams.readAndClose(getReader());
-        return Streams.readAndClose(getReader(charsetName));
+        if (Strings.isBlank(content)) {
+            if (charsetName == null)
+                content =  Streams.readAndClose(getReader());
+            else
+                content = Streams.readAndClose(getReader(charsetName));
+        }
+        return content;
     }
 }
