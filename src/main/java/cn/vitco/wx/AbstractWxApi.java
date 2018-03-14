@@ -371,6 +371,9 @@ public abstract class AbstractWxApi implements WxApi {
 
     /**
      * 刷新AccessToken
+     * @author Sterling 【linktoyl@163.com】
+     * @date 2018/3/15 0:48
+     *
      */
     protected synchronized void reflushAccessToken() throws IllegalArgumentException, HttpException{
         String url = String.format(WX_API_URL.WX_GET_ACCESSTOKEN, WX_API_CONFIG.getAppid(), WX_API_CONFIG.getAppsecret());
