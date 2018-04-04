@@ -106,7 +106,7 @@ public abstract class AbstractWxApi implements WxApi {
      * @return
      */
     public WxResContent wx_mini_login(String code){
-        String url = String.format(WX_API_URL.WX_MINI_LOGIN, WX_API_CONFIG.getAppid(), WX_API_CONFIG.getAppsecret(), code);
+        String url = String.format(WX_API_URL.WX_MINI_LOGIN, WX_API_CONFIG.getMini_appid(), WX_API_CONFIG.getMini_appsecret(), code);
         WxRequest req = new WxRequest(url, METHOD.GET);
         WxResponse resp = null;
         try {
@@ -137,7 +137,7 @@ public abstract class AbstractWxApi implements WxApi {
         if(json != null){
             JSONObject watermark = (JSONObject) json.remove("watermark");
             String appid = watermark.getString("appid");
-            if(!appid.equals(WX_API_CONFIG.getAppid()))
+            if(!appid.equals(WX_API_CONFIG.getMini_appid()))
                 throw new WxException("解密数据与设置的AppID匹配失败!");
             Set<Map.Entry> ens = json.entrySet();
             for (Map.Entry en: ens) {

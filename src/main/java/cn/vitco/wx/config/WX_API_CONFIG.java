@@ -23,6 +23,9 @@ public class WX_API_CONFIG {
     private static String mchid;
     private static String certUrl;
 
+    private static String mini_appid;
+    private static String mini_appsecret;
+
     private static String checkName;
 
 
@@ -44,6 +47,9 @@ public class WX_API_CONFIG {
             payKey = prop.getProperty("PAY_KEY");
             mchid = prop.getProperty("MCHID");
             certUrl = prop.getProperty("CERT_PATH");
+
+            mini_appid = prop.getProperty("MINI_APP_ID","");
+            mini_appsecret = prop.getProperty("MINI_APP_SECRET","");
 
             checkName = prop.getProperty("PAY_CHECK_NAME", "NO_CHECK");
         } catch (FileNotFoundException e) {
@@ -88,4 +94,15 @@ public class WX_API_CONFIG {
     public static String getCheckName() {
         return checkName;
     }
+
+    public static String getMini_appid() {
+        return mini_appid;
+    }
+
+
+    public static String getMini_appsecret() {
+        return mini_appsecret;
+    }
+
+
 }
