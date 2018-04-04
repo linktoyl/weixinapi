@@ -4,11 +4,18 @@
 
   <groupId>cn.vitco</groupId>
   <artifactId>weixin-api</artifactId>
-  <version>1.0.2</version>
+  <version>1.0.3</version>
   <packaging>jar</packaging>
 
   <name>weixin-api</name>
   <url>http://maven.apache.org</url>
+
+  <distributionManagement>
+    <repository>
+      <id>vitco</id>
+      <url>http://192.168.13.88/nexus/content/repositories/vitco</url>
+    </repository>
+  </distributionManagement>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -107,4 +114,5 @@
     </dependency>
 
   </dependencies>
+
 </project>
