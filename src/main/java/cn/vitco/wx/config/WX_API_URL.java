@@ -52,6 +52,15 @@ public class WX_API_URL {
     public final static String WX_TEMPLATE_DEL = "https://api.weixin.qq.com/cgi-bin/template/del_private_template?access_token=%s";
     public final static String WX_TEMPLATE_SEND = "https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=%s";
 
+    /**
+     * 微信公众号 自定义菜单API  URL
+     *
+     */
+    public final static String WX_MENU_CREATE = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=%s";
+    public final static String WX_MENU_GET = "https://api.weixin.qq.com/cgi-bin/menu/get?access_token=%s";
+    public final static String WX_MENU_DEL = "https://api.weixin.qq.com/cgi-bin/menu/delete?access_token=%s";
+    public final static String WX_CURR_MENU_GET = "https://api.weixin.qq.com/cgi-bin/get_current_selfmenu_info?access_token=%s";
+
 
     /**
      * 微信小程序 登录

@@ -1,18 +1,19 @@
 package cn.vitco;
 
 import cn.vitco.cache.redis.JedisClusterFactory;
+import cn.vitco.wx.AbstractWxApi;
 import cn.vitco.wx.VitcoWxApi;
+import cn.vitco.wx.WxMenuApi;
 import cn.vitco.wx.config.WX_API_CONFIG;
 import cn.vitco.wx.entity.*;
+import cn.vitco.wx.entity.menu.MenuType;
 import cn.vitco.wx.util.WxMap;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import redis.clients.jedis.JedisCluster;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Created by Sterling on 2017/12/12.
@@ -20,6 +21,50 @@ import java.util.Random;
 public class Tester {
 
     public static void main(String[] args) {
+
+        VitcoWxApi wxApi = new VitcoWxApi();
+        WxMenuApi menuApi = new WxMenuApi();
+        //String token = wxApi.getAccessToken();
+        String token = "8_fbSi6Rg4TgWsTDy24-0e70IXUuCfyqjhimJ27AMVJUaBQOZx1rLQADROzW8U1-g0dWqFPtWBKGA4fHYfmH-YquvibS-BgJxTegvXuCm8iP7raQmuvwwDlKwmGhQ14d9VwDBOD-0eC0-hRwgfASVcAFAKCF";
+        System.out.println("AccessToken："+token);
+
+        /*WxResContent res = menuApi.getCurrSelfMenu(wxApi.getAccessToken());
+        if(res.ok()) {
+            System.out.println(res);
+        }else {
+            System.out.println(res.errcode()+res.errmsg());
+        }*/
+
+        //一级菜单
+        List<WxMenu> list = new ArrayList<WxMenu>();
+        List<WxMenu> list2 = new ArrayList<WxMenu>();
+        WxMenu root = new WxMenu();
+        root.setName("一机组");
+        WxMenu menu = new WxMenu();
+        menu.setType(MenuType.click);
+        menu.setName("测试");
+        menu.setKey("V1001_GOOD");
+        list.add(root);
+        list2.add(menu);
+        root.setSub_button(list2);
+        System.out.println(JSONArray.toJSON(list));
+        System.out.println(menuApi.getMenu(token));
+        //System.out.println(menuApi.deleteMenu(token));
+        WxResContent res = menuApi.createMenu(token, list);
+        if(res.ok()) {
+            System.out.println(res);
+        }else {
+            System.out.println(res.errcode()+res.errmsg());
+        }
+
+
+    }
+
+    public static void log(String str){
+        System.out.println(str);
+    }
+
+    public static void testTemplate() {
         VitcoWxApi wxapi = new VitcoWxApi();
 
         TemplateMsgData template = new TemplateMsgData();
@@ -37,19 +82,12 @@ public class Tester {
 
         log(template.toString());
 
-
-
-
         WxResContent res1 = wxapi.sendTemplateMsg(template);
 
         log(res1.toString());
         WxResContent res = wxapi.getTemplateList();
 
         log(res.toString());
-    }
-
-    public static void log(String str){
-        System.out.println(str);
     }
 
     public static WxPayment genWxPayment(){

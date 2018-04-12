@@ -194,8 +194,8 @@ public class WxRequest {
         } else {
             if (header.get("Content-Type") == null) {
                 if (enc == null)
-                    enc = Charset.defaultCharset().name();
-                header.put("Content-Type", "application/x-www-form-urlencoded; charset=" + enc.toUpperCase());
+                    enc = Encoding.UTF8;
+                header.put("Content-Type", "application/json; encoding=" + enc.toUpperCase());
             }
             if (null == data) {
                 try {
@@ -204,6 +204,7 @@ public class WxRequest {
                     throw Lang.wrapThrow(e);
                 }
             }
+            System.out.println(new String(data));
             return new ByteArrayInputStream(data);
         }
     }

@@ -1,5 +1,7 @@
 package cn.vitco.wx.entity;
 
+import cn.vitco.wx.entity.menu.MenuType;
+
 import java.util.List;
 
 /**
@@ -8,7 +10,7 @@ import java.util.List;
 public class WxMenu {
 
     private String name;
-    private String type;
+    private MenuType type;
     private String key;
     private String url;
     private String appid;
@@ -25,11 +27,11 @@ public class WxMenu {
         this.name = name;
     }
 
-    public String getType() {
+    public MenuType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(MenuType type) {
         this.type = type;
     }
 
@@ -73,12 +75,19 @@ public class WxMenu {
         this.media_id = media_id;
     }
 
-    public List<WxMenu> getSubButtons() {
+    public List<WxMenu> getSub_button() {
         return sub_button;
     }
 
-    public void setSubButtons(List<WxMenu> subButtons) {
-        this.sub_button = subButtons;
+    public void setSub_button(List<WxMenu> sub_button) {
+        this.sub_button = sub_button;
     }
+
+    /*public String toString() {
+        StringBuilder strBuilder = new StringBuilder();
+
+
+        return strBuilder.toString();
+    }*/
 }
 
