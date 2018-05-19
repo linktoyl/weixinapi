@@ -11,7 +11,7 @@ public interface WxJsapiTicketApi {
     //void setJsapiTicketStore(WxJsapiTicketStore ats);
 
 
-    String getJsapiTicket() throws WxException;
+    String getJsapiTicket(String appid) throws WxException;
 
-    WxMap genJsSDKConfig(String url) throws WxException;
+    WxMap genJsSDKConfig(String appid, String url) throws WxException;
 }

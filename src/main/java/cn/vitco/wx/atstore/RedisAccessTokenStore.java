@@ -19,7 +19,7 @@ import java.util.Map;
 public class RedisAccessTokenStore implements WxAccessTokenStoreApi {
 
     private final static Logger log = Logger.getLogger("WxApi_Log");
-    protected String tokenKey = "accessToken@accessToken";
+    protected String tokenKey = "accessToken@";
     protected JedisCluster jedisCluster;
 
     public RedisAccessTokenStore() {}
@@ -52,15 +52,15 @@ public class RedisAccessTokenStore implements WxAccessTokenStoreApi {
     }
 
     @Override
-    public WxAccessToken get() {
+    public WxAccessToken get(String appid) {
 
         try {
             if (tokenKey == null) {
                 throw new RuntimeException("Redis 的key 不能为空!");
             }
-            Map<String, String> hash = jedisCluster.hgetAll(tokenKey);
+            Map<String, String> hash = jedisCluster.hgetAll(tokenKey+appid);
             if (hash == null || hash.isEmpty()) {
-                log.warn(String.format("在redis中未找到有效key为[%s]的 token ", tokenKey));
+                log.warn(String.format("在redis中未找到有效key为[%s]的 token ", tokenKey+appid));
                 return null;
             }
             WxAccessToken at = new WxAccessToken();// 从redis中拿出3个值组装成WxAccessToken返回
@@ -68,7 +68,7 @@ public class RedisAccessTokenStore implements WxAccessTokenStoreApi {
             at.setLastCacheTimeMillis(Long.valueOf(hash.get("lastCacheMillis")));
             at.setExpires(Integer.valueOf(hash.get("expires")));
             log.debug(String.format("微信access_token 从 redis 中取值 key [%s] : \n %s",
-                    tokenKey,
+                    tokenKey+appid,
                     JSONObject.toJSON(at)));
             return at;
         }
@@ -87,7 +87,7 @@ public class RedisAccessTokenStore implements WxAccessTokenStoreApi {
     }
 
     @Override
-    public void save(String token, int expires, long lastCacheTimeMillis) {
+    public void save(String appid, String token, int expires, long lastCacheTimeMillis) {
         try {
             if (tokenKey == null) {
                 throw new RuntimeException("Redis access_token key should not be null!");
@@ -96,10 +96,10 @@ public class RedisAccessTokenStore implements WxAccessTokenStoreApi {
             hash.put("token", token);// 存入token值
             hash.put("lastCacheMillis", String.valueOf(lastCacheTimeMillis));// 存入设置的过期时间
             hash.put("expires", String.valueOf(expires));// 存入当前缓存时间
-            String result = jedisCluster.hmset(tokenKey, hash);
-            jedisCluster.expire(tokenKey, expires);
+            String result = jedisCluster.hmset(tokenKey+appid, hash);
+            jedisCluster.expire(tokenKey+appid, expires);
             log.info(String.format("新的access_token生成存储redis key [%s] , redis 返回: %s",
-                    tokenKey,
+                    tokenKey+appid,
                     result));
         }
         catch (Exception e) {

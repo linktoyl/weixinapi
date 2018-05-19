@@ -18,7 +18,7 @@ import java.util.Map;
 public class RedisJsapiTicketStore implements WxJsapiTicketStoreApi {
 
     private final static Logger log = Logger.getLogger("WxApi_Log");
-    protected String jsapiKey = "jsapiTicket@jsapiTicket";
+    protected String jsapiKey = "jsapiTicket@";
     protected JedisCluster jedisCluster;
 
     public RedisJsapiTicketStore(JedisCluster jedisCluster) {
@@ -49,14 +49,14 @@ public class RedisJsapiTicketStore implements WxJsapiTicketStoreApi {
     }
 
     @Override
-    public WxJsapiTicket get() {
+    public WxJsapiTicket get(String appid) {
         try {
             if (jsapiKey == null) {
                 throw new RuntimeException("Redis 的key 不能为空!");
             }
-            Map<String, String> hash = jedisCluster.hgetAll(jsapiKey);
+            Map<String, String> hash = jedisCluster.hgetAll(jsapiKey+appid);
             if (hash == null || hash.isEmpty()) {
-                log.warn(String.format("在redis中未找到有效key为[%s]的 token ", jsapiKey));
+                log.warn(String.format("在redis中未找到有效key为[%s]的 token ", jsapiKey+appid));
                 return null;
             }
             WxJsapiTicket jt = new WxJsapiTicket();// 从redis中拿出3个值组装成WxAccessToken返回
@@ -64,7 +64,7 @@ public class RedisJsapiTicketStore implements WxJsapiTicketStoreApi {
             jt.setLastCacheTimeMillis(Long.valueOf(hash.get("lastCacheMillis")));
             jt.setExpires(Integer.valueOf(hash.get("expires")));
             log.debug(String.format("微信access_token 从 redis 中取值 key [%s] : \n %s",
-                    jsapiKey,
+                    jsapiKey+appid,
                     JSONObject.toJSON(jt)));
             return jt;
         }
@@ -83,7 +83,7 @@ public class RedisJsapiTicketStore implements WxJsapiTicketStoreApi {
     }
 
     @Override
-    public void save(String ticket, int expires, long lastCacheTimeMillis) {
+    public void save(String appid, String ticket, int expires, long lastCacheTimeMillis) {
 
         try {
             if (jsapiKey == null) {
@@ -93,10 +93,10 @@ public class RedisJsapiTicketStore implements WxJsapiTicketStoreApi {
             hash.put("ticket", ticket);// 存入token值
             hash.put("lastCacheMillis", String.valueOf(lastCacheTimeMillis));// 存入设置的过期时间
             hash.put("expires", String.valueOf(expires));// 存入当前缓存时间
-            String result = jedisCluster.hmset(jsapiKey, hash);
-            jedisCluster.expire(jsapiKey, expires);
+            String result = jedisCluster.hmset(jsapiKey+appid, hash);
+            jedisCluster.expire(jsapiKey+appid, expires);
             log.info(String.format("新的access_token生成存储redis key [%s] , redis 返回: %s",
-                    jsapiKey,
+                    jsapiKey+appid,
                     result));
         }
         catch (Exception e) {

@@ -10,10 +10,10 @@ import cn.vitco.wx.util.WxMap;
  *
  */
 public interface WxTemplateMsg {
-    WxResContent setIndustry(String industry1, String industry2);
-    WxResContent getIndustry();
-    WxResContent addTemplateShortId(String template_id_short);
-    WxResContent getTemplateList();
-    WxResContent delTemplate(String template_id);
-    WxResContent sendTemplateMsg(TemplateMsgData tempData);
+    WxResContent setIndustry(String appid, String industry1, String industry2);
+    WxResContent getIndustry(String appid);
+    WxResContent addTemplateShortId(String appid, String template_id_short);
+    WxResContent getTemplateList(String appid);
+    WxResContent delTemplate(String appid, String template_id);
+    WxResContent sendTemplateMsg(String appid, TemplateMsgData tempData);
 }

@@ -5,6 +5,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -26,6 +28,8 @@ public class WX_API_CONFIG {
     private static String mini_appid;
     private static String mini_appsecret;
 
+    private static Map<String, String> appsecretMap = new HashMap<String, String>();
+
     private static String checkName;
 
 
@@ -40,6 +44,7 @@ public class WX_API_CONFIG {
             token = prop.getProperty("WX_TOKEN");
             appid = prop.getProperty("APP_ID");
             appsecret = prop.getProperty("APP_SECRET");
+            appsecretMap.put(appid, appsecret);
             encodingAesKey = prop.getProperty("ENCODING_AESKEY");
             //retryTimes = Integer.valueOf(prop.getProperty("RETRY_TIMES","3"));
             accessTokenCache = prop.getProperty("WX_ACCESSTOKEN_CACHE","Memory");
@@ -50,7 +55,7 @@ public class WX_API_CONFIG {
 
             mini_appid = prop.getProperty("MINI_APP_ID","");
             mini_appsecret = prop.getProperty("MINI_APP_SECRET","");
-
+            appsecretMap.put(mini_appid, mini_appsecret);
             checkName = prop.getProperty("PAY_CHECK_NAME", "NO_CHECK");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -69,6 +74,10 @@ public class WX_API_CONFIG {
 
     public static String getAppid() {
         return appid;
+    }
+
+    public static String getAppsecretByAppid(String appid) {
+        return appsecretMap.get(appid);
     }
 
     public static String getAppsecret() {

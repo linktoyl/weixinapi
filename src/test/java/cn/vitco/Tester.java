@@ -21,7 +21,10 @@ import java.util.*;
 public class Tester {
 
     public static void main(String[] args) {
+        testTemplate();
+    }
 
+    public static void menu_test() {
         VitcoWxApi wxApi = new VitcoWxApi();
         WxMenuApi menuApi = new WxMenuApi();
         //String token = wxApi.getAccessToken();
@@ -56,8 +59,6 @@ public class Tester {
         }else {
             System.out.println(res.errcode()+res.errmsg());
         }
-
-
     }
 
     public static void log(String str){
@@ -68,8 +69,16 @@ public class Tester {
         VitcoWxApi wxapi = new VitcoWxApi();
 
         TemplateMsgData template = new TemplateMsgData();
-        template.setTouser("o3XrQw6NdLPA821Nt7_lnQgv9SP8");
-        template.setTemplate_id("iPItszYei9mEAYWwnjOJZLRaZCMu-uXpoTtjBjpl8yM");
+        template.setTouser("oXuE2450eqGczCElozK9LNFfSR6c");
+        /*template.setTemplate_id("iPItszYei9mEAYWwnjOJZLRaZCMu-uXpoTtjBjpl8yM");
+        TemplateMsgData.DataLabel first = template.new DataLabel("您6月5日开具的发票，中了2018年3月1日重庆市国税局第1期二次摇奖的的三等奖");
+        TemplateMsgData.DataLabel remark = template.new DataLabel("请于60日内到市国家税务局指定的X地领取奖金，逾期未兑视为放弃。详情请咨询纳税服务热线12366。");
+        TemplateMsgData.Data data = template.new Data(first, remark);
+        TemplateMsgData.DataLabel keynote1 = template.new DataLabel("\n150000000000");
+        TemplateMsgData.DataLabel keynote2 = template.new DataLabel("00000001");
+        TemplateMsgData.DataLabel keynote3 = template.new DataLabel("三等奖");
+        TemplateMsgData.DataLabel keynote4 = template.new DataLabel("2万元");*/
+        template.setTemplate_id("iIpeMgAVPaI8kMpwpvXhvziRx5p88yvNGGRPwzl7NDM");
         TemplateMsgData.DataLabel first = template.new DataLabel("您6月5日开具的发票，中了2018年3月1日重庆市国税局第1期二次摇奖的的三等奖");
         TemplateMsgData.DataLabel remark = template.new DataLabel("请于60日内到市国家税务局指定的X地领取奖金，逾期未兑视为放弃。详情请咨询纳税服务热线12366。");
         TemplateMsgData.Data data = template.new Data(first, remark);
@@ -82,10 +91,10 @@ public class Tester {
 
         log(template.toString());
 
-        WxResContent res1 = wxapi.sendTemplateMsg(template);
+        WxResContent res1 = wxapi.sendTemplateMsg("wx4cd5a3c1a8e22248",template);
 
         log(res1.toString());
-        WxResContent res = wxapi.getTemplateList();
+        WxResContent res = wxapi.getTemplateList("wx4cd5a3c1a8e22248");
 
         log(res.toString());
     }
@@ -170,10 +179,10 @@ public class Tester {
         //JedisClusterFactory fac = new JedisClusterFactory();
         //fac.getJedisCluster().del("accessToken@accessToken");
         VitcoWxApi wxapi = new VitcoWxApi();
-        WxResContent wxat =  wxapi.user_info("o3XrQw6NdLPA821Nt7_lnQgv9SP8");
+        /*WxResContent wxat =  wxapi.user_info("o3XrQw6NdLPA821Nt7_lnQgv9SP8");
         System.out.println(JSONObject.toJSON(wxat));
         WxMap wxat1 =  wxapi.genJsSDKConfig("fdsfsd");
-        System.out.println(JSONObject.toJSON(wxat1));
+        System.out.println(JSONObject.toJSON(wxat1));*/
         // VitcoWxApi wxApi = new VitcoWxApi();
         //wxApi.send_redpack(WX_API_CONFIG.getPayKey(), genWxRedPack(), WX_API_CONFIG.getCertUrl(), WX_API_CONFIG.getMchid());
         //--1450326002201712121625357215
@@ -185,7 +194,7 @@ public class Tester {
         map.put("appid", WX_API_CONFIG.getAppid());
         map.put("bill_type", "MCHT");
         wxApi.query_redpackRecode(WX_API_CONFIG.getPayKey(), map, WX_API_CONFIG.getCertUrl(), WX_API_CONFIG.getMchid());*/
-        //wxApi.pay_transfers(WX_API_CONFIG.getPayKey(), genWxPayment(), WX_API_CONFIG.getCertUrl(), WX_API_CONFIG.getMchid());
+        wxapi.pay_transfers(WX_API_CONFIG.getPayKey(), genWxPayment(), WX_API_CONFIG.getCertUrl(), WX_API_CONFIG.getMchid());
         //1450326002201712121706369279
         /*Map<String, Object> map = new HashMap<String, Object>();
         String noncestr = getRandomStringByLength(20);// 随机字符串

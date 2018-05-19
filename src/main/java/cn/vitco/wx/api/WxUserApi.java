@@ -9,7 +9,7 @@ import cn.vitco.wx.entity.WxResContent;
  *
  */
 public interface WxUserApi {
-    WxResContent user_info(String openid);
+    WxResContent user_info(String appid, String openid);
 
     WxResContent wx_mini_login(String code);
 

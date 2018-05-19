@@ -64,27 +64,27 @@ public abstract class AbstractWxApi implements WxApi {
      * @return
      */
     @Override
-    public WxResContent user_info(String openid) {
-        WxResContent wxres = user_info_safe(openid);
+    public WxResContent user_info(String appid, String openid) {
+        WxResContent wxres = user_info_safe(appid, openid);
         if(wxres.errcode()==40001){
             synchronized (lock) {
                 try {
-                    reflushAccessToken();
+                    reflushAccessToken(appid);
                 } catch (IllegalArgumentException e) {
                     log.error("刷新JsapiTicket出错:"+e.getMessage());
                 } catch (HttpException e) {
                     log.error("刷新JsapiTicket出错[网络问题]:"+e.getMessage());
                 }
             }
-            wxres = user_info_safe(openid);
+            wxres = user_info_safe(appid, openid);
         }
         return wxres;
     }
 
-    private WxResContent user_info_safe(String openid){
+    private WxResContent user_info_safe(String appid, String openid){
         WxRequest req = new WxRequest(WX_API_URL.WX_GET_USERINFO, METHOD.GET);
         WxMap params = new WxMap();
-        params.put("access_token", getAccessToken());
+        params.put("access_token", getAccessToken(appid));
         params.put("openid", openid);
         req.setParams(params);
         WxResponse resp = null;
@@ -241,8 +241,8 @@ public abstract class AbstractWxApi implements WxApi {
      * @return
      */
     @Override
-    public WxMap genJsSDKConfig(String url) throws WxException{
-        String jt = this.getJsapiTicket();
+    public WxMap genJsSDKConfig(String appid, String url) throws WxException{
+        String jt = this.getJsapiTicket(appid);
         if(jt == null)
             throw new WxException("生成JsSdkConfig失败, JsapiTicket为null!");
         long timestamp = System.currentTimeMillis() / 1000;
@@ -254,7 +254,7 @@ public abstract class AbstractWxApi implements WxApi {
         WxMap map = new WxMap();
         map.put("url", url);
         map.put("jsapi_ticket", jt);
-        map.put("appid", WX_API_CONFIG.getAppid());
+        map.put("appid", appid);
         map.put("timestamp", timestamp);
         map.put("nonceStr", nonceStr);
         map.put("signature", signature);
@@ -302,18 +302,18 @@ public abstract class AbstractWxApi implements WxApi {
 
 
     @Override
-    public String getJsapiTicket() {
-        WxJsapiTicket jt = jsapiTicketStore.get();
+    public String getJsapiTicket(String appid) {
+        WxJsapiTicket jt = jsapiTicketStore.get(appid);
         if (jt == null) {
             synchronized (lock) {
                 try {
-                    reflushJsapiTicket();
+                    reflushJsapiTicket(appid);
                 } catch (IllegalArgumentException e) {
                     log.error("刷新JsapiTicket出错:"+e.getMessage());
                 } catch (HttpException e) {
                     log.error("刷新JsapiTicket出错[网络问题]:"+e.getMessage());
                 }
-                jt = jsapiTicketStore.get();
+                jt = jsapiTicketStore.get(appid);
             }
         }
         if(jt == null){
@@ -323,18 +323,18 @@ public abstract class AbstractWxApi implements WxApi {
     }
 
     @Override
-    public String getAccessToken() {
-        WxAccessToken at = accessTokenStore.get();
+    public String getAccessToken(String appid) {
+        WxAccessToken at = accessTokenStore.get(appid);
         if (at == null) {
             synchronized (lock) {
                 try {
-                    reflushAccessToken();
+                    reflushAccessToken(appid);
                 } catch (IllegalArgumentException e) {
                     log.error("刷新AccessToken出错:"+e.getMessage());
                 } catch (HttpException e) {
                     log.error("刷新AccessToken出错[网络问题]:"+e.getMessage());
                 }
-                at = accessTokenStore.get();
+                at = accessTokenStore.get(appid);
             }
         }
         if(at == null){
@@ -346,8 +346,8 @@ public abstract class AbstractWxApi implements WxApi {
     /**
      * 刷新JsApiTicket
      */
-    protected synchronized void reflushJsapiTicket() throws IllegalArgumentException, HttpException {
-        String accessToken = this.getAccessToken();
+    protected synchronized void reflushJsapiTicket(String appid) throws IllegalArgumentException, HttpException {
+        String accessToken = this.getAccessToken(appid);
 
         String url = String.format(WX_API_URL.WX_GET_JSAPITICKET, accessToken);
         if (log.isDebugEnabled())
@@ -366,7 +366,7 @@ public abstract class AbstractWxApi implements WxApi {
         WxResContent re = WxResContent.format(str);
         String ticket = re.getString("ticket");
         int expires = re.getInt("expires_in") - 200;// 微信默认超时为7200秒，此处设置稍微短一点
-        jsapiTicketStore.save(ticket, expires, System.currentTimeMillis());
+        jsapiTicketStore.save(appid, ticket, expires, System.currentTimeMillis());
     }
 
     /**
@@ -375,8 +375,8 @@ public abstract class AbstractWxApi implements WxApi {
      * @date 2018/3/15 0:48
      *
      */
-    protected synchronized void reflushAccessToken() throws IllegalArgumentException, HttpException{
-        String url = String.format(WX_API_URL.WX_GET_ACCESSTOKEN, WX_API_CONFIG.getAppid(), WX_API_CONFIG.getAppsecret());
+    protected synchronized void reflushAccessToken(String appid) throws IllegalArgumentException, HttpException{
+        String url = String.format(WX_API_URL.WX_GET_ACCESSTOKEN, appid, WX_API_CONFIG.getAppsecretByAppid(appid));
         if (log.isDebugEnabled())
             log.debug("刷新access_token 地址:" + url);
 
@@ -391,12 +391,12 @@ public abstract class AbstractWxApi implements WxApi {
         WxResContent re = WxResContent.format(str);
         String token = re.getString("access_token");
         int expires = re.getInt("expires_in") - 200;// 微信默认超时为7200秒，此处设置稍微短一点
-        accessTokenStore.save(token, expires, System.currentTimeMillis());
+        accessTokenStore.save(appid, token, expires, System.currentTimeMillis());
     }
 
     @Override
-    public WxResContent setIndustry(String industry1, String industry2) {
-        String accessToken = getAccessToken();
+    public WxResContent setIndustry(String appid, String industry1, String industry2) {
+        String accessToken = getAccessToken(appid);
         String url = String.format(WX_API_URL.WX_TEMPLATE_SET_INDUSTRY, accessToken);
         WxRequest req = new WxRequest(url, METHOD.POST);
         WxMap params = new WxMap();
@@ -419,8 +419,8 @@ public abstract class AbstractWxApi implements WxApi {
     }
 
     @Override
-    public WxResContent getIndustry() {
-        String accessToken = getAccessToken();
+    public WxResContent getIndustry(String appid) {
+        String accessToken = getAccessToken(appid);
         String url = String.format(WX_API_URL.WX_TEMPLATE_GET_INDUSTRY, accessToken);
         WxRequest req = new WxRequest(url, METHOD.GET);
         WxResponse resp = null;
@@ -433,10 +433,10 @@ public abstract class AbstractWxApi implements WxApi {
     }
 
     @Override
-    public WxResContent addTemplateShortId(String template_id_short) {
+    public WxResContent addTemplateShortId(String appid, String template_id_short) {
         if(template_id_short == null || template_id_short.isEmpty())
             return null;
-        String accessToken = getAccessToken();
+        String accessToken = getAccessToken(appid);
         String url = String.format(WX_API_URL.WX_TEMPLATE_ADD_SHORT_ID, accessToken);
         WxRequest req = new WxRequest(url, METHOD.POST);
 
@@ -456,8 +456,8 @@ public abstract class AbstractWxApi implements WxApi {
     }
 
     @Override
-    public WxResContent getTemplateList() {
-        String accessToken = getAccessToken();
+    public WxResContent getTemplateList(String appid) {
+        String accessToken = getAccessToken(appid);
         String url = String.format(WX_API_URL.WX_TEMPLATE_ALL_LIST, accessToken);
         WxRequest req = new WxRequest(url, METHOD.GET);
         WxResponse resp = null;
@@ -470,10 +470,10 @@ public abstract class AbstractWxApi implements WxApi {
     }
 
     @Override
-    public WxResContent delTemplate(String template_id) {
+    public WxResContent delTemplate(String appid, String template_id) {
         if(template_id == null || template_id.isEmpty())
             return null;
-        String accessToken = getAccessToken();
+        String accessToken = getAccessToken(appid);
         String url = String.format(WX_API_URL.WX_TEMPLATE_DEL, accessToken);
         WxRequest req = new WxRequest(url, METHOD.POST);
 
@@ -493,10 +493,10 @@ public abstract class AbstractWxApi implements WxApi {
     }
 
     @Override
-    public WxResContent sendTemplateMsg(TemplateMsgData tempData) {
+    public WxResContent sendTemplateMsg(String appid, TemplateMsgData tempData) {
         if(tempData == null)
             return null;
-        String accessToken = getAccessToken();
+        String accessToken = getAccessToken(appid);
         String url = String.format(WX_API_URL.WX_TEMPLATE_SEND, accessToken);
         WxRequest req = new WxRequest(url, METHOD.POST);
 
