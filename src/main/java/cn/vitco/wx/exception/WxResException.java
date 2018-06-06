@@ -3,7 +3,7 @@ package cn.vitco.wx.exception;
 /**
  * 微信API接口调用返回异常
  */
-public class WxResException extends Exception {
+public class WxResException extends WxException {
     private String errCode;
     private String errMsg;
     private String bussMsg;

@@ -15,6 +15,7 @@ import cn.vitco.wx.config.WX_API_CONFIG;
 import cn.vitco.wx.config.WX_API_URL;
 import cn.vitco.wx.entity.*;
 import cn.vitco.wx.exception.WxException;
+import cn.vitco.wx.exception.WxRunException;
 import cn.vitco.wx.http.WxRequest;
 import cn.vitco.wx.http.WxRequest.METHOD;
 import cn.vitco.wx.http.WxResponse;
@@ -296,7 +297,7 @@ public abstract class AbstractWxApi implements WxApi {
             log.info("微信支付返回:\n " + respContent);
             return new WxMap(Xmls.xmlToMap(respContent,"xml"));
         } catch (Exception e) {
-            throw Lang.wrapThrow(e);
+            throw new WxRunException("支付结果异常!", e);
         }
     }
 
