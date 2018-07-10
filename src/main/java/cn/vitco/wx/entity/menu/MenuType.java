@@ -9,7 +9,7 @@ public enum MenuType {
     scancode_waitmsg("scancode_waitmsg"), pic_sysphoto("pic_sysphoto"),
     pic_photo_or_album("pic_photo_or_album"), pic_weixin("pic_weixin"),
     location_select("location_select"), media_id("media_id"),
-    view_limited("view_limited");
+    view_limited("view_limited"), miniprogram("miniprogram");
 
     private String name;
     private MenuType(String name) {
