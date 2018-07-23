@@ -38,8 +38,7 @@ public class WX_API_CONFIG {
     static{
         try {
             Properties prop = new Properties();
-            String path = Thread.currentThread().getContextClassLoader().getResource("").getPath()+"/";
-            InputStream is = new FileInputStream(path + WX_CONFIG_FILENAME);
+            InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("/resource/"+WX_CONFIG_FILENAME);
             prop.load(is);
             token = prop.getProperty("WX_TOKEN");
             appid = prop.getProperty("APP_ID");
