@@ -82,6 +82,32 @@ public abstract class AbstractWxApi implements WxApi {
         return wxres;
     }
 
+    /**
+     * 拉取用户信息(需scope为 snsapi_userinfo)
+     * @param access_token 网页授权接口调用凭证,注意：此access_token与基础支持的access_token不同
+     * @param openid
+     * @return
+     */
+    @Override
+    public WxResContent user_oauth(String access_token, String openid) {
+        WxRequest req = new WxRequest(WX_API_URL.WX_OAUTH_USERINFO, METHOD.GET);
+        WxMap params = new WxMap();
+        params.put("access_token", access_token);
+        params.put("openid", openid);
+        params.put("lang", "zh_CN");
+        req.setParams(params);
+        WxResponse resp = null;
+        try {
+            resp = req.send();
+        } catch (HttpException e) {
+            log.error("拉取用户信息(需scope为 snsapi_userinfo)异常:"+openid, e.getCause());
+        }
+        if (resp == null || !resp.isOK()) {
+            return null;
+        }
+        return WxResContent.format(resp.getContent("utf-8"));
+    }
+
     private WxResContent user_info_safe(String appid, String openid){
         WxRequest req = new WxRequest(WX_API_URL.WX_GET_USERINFO, METHOD.GET);
         WxMap params = new WxMap();
@@ -386,11 +412,15 @@ public abstract class AbstractWxApi implements WxApi {
         if (resp == null || !resp.isOK())
             throw new IllegalArgumentException("刷新AccessToken失败!");
         String str = resp.getContent();
-        if (log.isDebugEnabled())
-            log.debug("刷新access_token 返回: " + str);
-
         WxResContent re = WxResContent.format(str);
         String token = re.getString("access_token");
+        if (log.isDebugEnabled())
+            log.debug("刷新access_token 返回: " + str);
+        if(token==null || token.isEmpty()) {
+            log.error("刷新access_token 错误: " + str);
+            throw new IllegalArgumentException("刷新AccessToken失败!");
+        }
+
         int expires = re.getInt("expires_in") - 200;// 微信默认超时为7200秒，此处设置稍微短一点
         accessTokenStore.save(appid, token, expires, System.currentTimeMillis());
     }

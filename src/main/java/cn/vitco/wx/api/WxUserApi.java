@@ -11,6 +11,8 @@ import cn.vitco.wx.entity.WxResContent;
 public interface WxUserApi {
     WxResContent user_info(String appid, String openid);
 
+    WxResContent user_oauth(String access_token, String openid);
+
     WxResContent wx_mini_login(String code);
 
 }
