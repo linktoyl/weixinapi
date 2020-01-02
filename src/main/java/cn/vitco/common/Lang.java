@@ -1,7 +1,11 @@
 package cn.vitco.common;
 
+import java.beans.BeanInfo;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -234,6 +238,30 @@ public class Lang {
         return map;
     }
 
+    /**
+     * Map 转换为 Object
+     * @param map
+     * @param beanClass
+     * @return
+     * @throws Exception
+     */
+    public static Object mapToObject(Map<String, Object> map, Class<?> beanClass) throws Exception {
+        if (map == null)
+            return null;
+
+        Object obj = beanClass.newInstance();
+
+        BeanInfo beanInfo = Introspector.getBeanInfo(obj.getClass());
+        PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
+        for (PropertyDescriptor property : propertyDescriptors) {
+            Method setter = property.getWriteMethod();
+            if (setter != null) {
+                setter.invoke(obj, map.get(property.getName()));
+            }
+        }
+
+        return obj;
+    }
 
     /**
      *

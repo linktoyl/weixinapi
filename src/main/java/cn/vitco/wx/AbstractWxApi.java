@@ -327,6 +327,34 @@ public abstract class AbstractWxApi implements WxApi {
         }
     }
 
+    /**
+     * 微信支付公共POST方法（不带证书）
+     *
+     * @param url      请求路径
+     * @param key      商户KEY
+     * @param params   参数
+     * @return
+     */
+    public WxMap postPay(String url, String key, Map<String, Object> params) throws WxException{
+        params.remove("sign");
+        String sign = WxPaySign.createSign(key, params);
+        params.put("sign", sign);
+        WxRequest req = new WxRequest(url, WxRequest.METHOD.POST);
+        String reqdata = Xmls.mapToXml(params, true);
+        log.info("微信支付XMl:\n %s" + reqdata);
+        req.setData(reqdata);
+        try {
+            WxResponse resp = req.send();
+            if (!resp.isOK())
+                throw new IllegalStateException("postPay without SSL, resp code=" + resp.getStatus());
+            String respContent = resp.getContent("UTF-8");
+            log.info("微信支付返回:\n " + respContent);
+            return new WxMap(Xmls.xmlToMap(respContent,"xml"));
+        } catch (Exception e) {
+            throw new WxRunException("支付结果异常!", e);
+        }
+    }
+
 
     @Override
     public String getJsapiTicket(String appid) {
@@ -543,5 +571,33 @@ public abstract class AbstractWxApi implements WxApi {
             e.printStackTrace();
         }
         return WxResContent.format(resp.getContent("utf-8"));
+    }
+
+
+    @Override
+    public WxMap pay_unifiedorder(String key, WxPayOrder order) throws WxException {
+        Map<String, Object> params = Lang.objectToMap(order);
+        return this.postPay(WX_API_URL.WX_PAY_ORDER, key, params);
+    }
+
+    @Override
+    public WxMap query_unifiedorder(String key, Map<String, Object> params) throws WxException {
+        return this.postPay(WX_API_URL.WX_QUERY_ORDER, key, params);
+    }
+
+    @Override
+    public WxMap close_unifiedorder(String key, Map<String, Object> params) throws WxException {
+        return this.postPay(WX_API_URL.WX_CLOSE_ORDER, key, params);
+    }
+
+    @Override
+    public WxMap pay_refund(String key, WxPayRefund refund, String certfile, String password) throws WxException {
+        Map<String, Object> params = Lang.objectToMap(refund);
+        return this.postPay(WX_API_URL.WX_REFUND, key, params, certfile, password);
+    }
+
+    @Override
+    public WxMap query_refund(String key, Map<String, Object> params) throws WxException {
+        return this.postPay(WX_API_URL.WX_QUERY_REFUND, key, params);
     }
 }

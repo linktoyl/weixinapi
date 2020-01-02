@@ -1,5 +1,7 @@
 package cn.vitco.wx.api;
 
+import cn.vitco.wx.entity.WxPayOrder;
+import cn.vitco.wx.entity.WxPayRefund;
 import cn.vitco.wx.entity.WxPayment;
 import cn.vitco.wx.entity.WxRedPack;
 import cn.vitco.wx.exception.WxException;
@@ -19,6 +21,13 @@ public interface WxPayApi {
     WxMap query_redpackRecode(String key, Map<String, Object> params, String certfile, String password)  throws WxException;
     WxMap pay_transfers(String key, WxPayment wxPayment, String certfile, String password) throws WxException;
     WxMap query_transfers(String key, Map<String, Object> params, String certfile, String password)  throws WxException;
+
+    WxMap pay_unifiedorder(String key, WxPayOrder order) throws WxException;
+    WxMap query_unifiedorder(String key, Map<String, Object> params) throws WxException;
+    WxMap close_unifiedorder(String key, Map<String, Object> params) throws WxException;
+    WxMap pay_refund(String key, WxPayRefund refund, String certfile, String password) throws WxException;
+    WxMap query_refund(String key, Map<String, Object> params) throws WxException;
+
 
 
 }

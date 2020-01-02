@@ -56,7 +56,7 @@ public class RedisJsapiTicketStore implements WxJsapiTicketStoreApi {
             }
             Map<String, String> hash = jedisCluster.hgetAll(jsapiKey+appid);
             if (hash == null || hash.isEmpty()) {
-                log.warn(String.format("在redis中未找到有效key为[%s]的 token ", jsapiKey+appid));
+                log.warn(String.format("在redis中未找到有效key为[%s]的 jsapiTicket ", jsapiKey+appid));
                 return null;
             }
             WxJsapiTicket jt = new WxJsapiTicket();// 从redis中拿出3个值组装成WxAccessToken返回

@@ -36,6 +36,15 @@ public class WX_API_URL {
      */
     public final static String WX_QUERY_REDPACK = "https://api.mch.weixin.qq.com/mmpaymkttransfers/gethbinfo";
     public final static String WX_PAY_REDPACK = "https://api.mch.weixin.qq.com/mmpaymkttransfers/sendredpack";
+    /**
+     * 微信商户平台 收款API
+     */
+    public final static String WX_PAY_ORDER = "https://api.mch.weixin.qq.com/pay/unifiedorder";
+    public final static String WX_QUERY_ORDER = "https://api.mch.weixin.qq.com/pay/orderquery";
+    public final static String WX_CLOSE_ORDER = "https://api.mch.weixin.qq.com/pay/closeorder";
+    public final static String WX_REFUND = "https://api.mch.weixin.qq.com/secapi/pay/refund";
+    public final static String WX_QUERY_REFUND = "https://api.mch.weixin.qq.com/pay/refundquery";
+    public final static String WX_DOWNLOADBILL = "https://api.mch.weixin.qq.com/pay/downloadbill";
 
     /**
      * 微信公众号 媒体API
