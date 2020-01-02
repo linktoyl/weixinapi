@@ -31,7 +31,7 @@
     <httpcore.version>4.4.1</httpcore.version>
     <xstream.version>1.4.3</xstream.version>
     <!-- json -->
-    <fastjson.version>1.2.7</fastjson.version>
+    <fastjson.version>1.2.25</fastjson.version>
 
 
     <dom4j.version>1.6.1</dom4j.version>
