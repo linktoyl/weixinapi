@@ -4,7 +4,7 @@
 
   <groupId>cn.vitco</groupId>
   <artifactId>weixin-api</artifactId>
-  <version>1.0.10</version>
+  <version>1.0.11</version>
   <packaging>jar</packaging>
 
   <name>weixin-api</name>
