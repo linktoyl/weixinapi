@@ -28,9 +28,11 @@ import java.util.*;
 public class Tester {
     static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     public static void main(String[] args) throws Exception {
-        changOpenid();
+        VitcoWxApi api = new VitcoWxApi();
+        WxResContent wxResp = api.wx_mini_login("033U3Dki0aQ8Oq1qxoli0JSCki0U3Dks");
+        String openid = wxResp.getString("openid");
 
-
+        System.out.println(openid);
 
     }
 
@@ -45,7 +47,7 @@ public class Tester {
         HashMap<String, String> reqHeaders = new HashMap<String, String>();
         //WxRequest wxRequest = new WxRequest(url, WxRequest.METHOD.POST);
         String dataStr = JSON.toJSONString(dataMap);
-
+        System.out.println(dataStr);
         //wxRequest.setData(dataStr.getBytes("utf-8"));
 
         //System.out.println(wxRequest.send().getContent());

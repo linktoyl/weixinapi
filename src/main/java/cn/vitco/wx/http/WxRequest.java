@@ -52,6 +52,7 @@ public class WxRequest {
     private boolean offEncode;
     private int timeout = 0;
     protected boolean followRedirects = true;
+    private int retry = 1;
 
     protected HttpURLConnection conn;
     protected SSLSocketFactory sslSocketFactory;
@@ -91,6 +92,12 @@ public class WxRequest {
             }
             return createResponse(getResponseHeader());
         } catch (Exception e) {
+            /*if(retry>0){
+                retry--;
+                this.url = this.url.replaceFirst("api", "api2");
+                cacheUrl = null;
+                return send();
+            }*/
             throw new HttpException(url, e);
         }
 

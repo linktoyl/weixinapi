@@ -163,7 +163,7 @@ public class WxHttp {
     }
 
     public static SSLSocketFactory nopSSLSocketFactory() throws Exception {
-        SSLContext sc = SSLContext.getInstance("SSL");
+        SSLContext sc = SSLContext.getInstance("SSL", "SunJSSE");
         TrustManager[] tmArr = {new X509TrustManager() {
             public void checkClientTrusted(X509Certificate[] paramArrayOfX509Certificate,
                                            String paramString) throws CertificateException {}
