@@ -75,5 +75,5 @@ public class WX_API_URL {
      * 微信小程序 登录
      */
     public final static String WX_MINI_LOGIN = "https://api.weixin.qq.com/sns/jscode2session?appid=%s&secret=%s&js_code=%s&grant_type=authorization_code";
-
+    public final static String WX_MINI_WXACODE_UNLIMIT = "https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=%S";
 }

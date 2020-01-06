@@ -600,4 +600,24 @@ public abstract class AbstractWxApi implements WxApi {
     public WxMap query_refund(String key, Map<String, Object> params) throws WxException {
         return this.postPay(WX_API_URL.WX_QUERY_REFUND, key, params);
     }
+
+    @Override
+    public WxResContent getWxAcodeUnlimit(String appid, String scene, String page, int width) throws HttpException {
+        String accessToken = getAccessToken(appid);
+        String url = String.format(WX_API_URL.WX_MINI_WXACODE_UNLIMIT, accessToken);
+        WxRequest req = new WxRequest(url, METHOD.POST);
+        WxMap params = new WxMap();
+        params.put("scene", scene);
+        params.put("page", page);
+        params.put("width", width);
+        try {
+            log.info(params.toString());
+            req.setData(params.toString().getBytes("utf-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        WxResponse resp = req.send();
+        log.info(resp.getContent());
+        return WxResContent.format(resp.getContent());
+    }
 }
