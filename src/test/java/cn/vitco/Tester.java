@@ -29,10 +29,12 @@ public class Tester {
     static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     public static void main(String[] args) throws Exception {
         VitcoWxApi api = new VitcoWxApi();
-        WxResContent wxResp = api.wx_mini_login("033U3Dki0aQ8Oq1qxoli0JSCki0U3Dks");
+        /*WxResContent wxResp = api.wx_mini_login("033U3Dki0aQ8Oq1qxoli0JSCki0U3Dks");
         String openid = wxResp.getString("openid");
 
-        System.out.println(openid);
+        System.out.println(openid);*/
+        WxResContent wxResp = api.getWxAcodeUnlimit(WX_API_CONFIG.getAppid(), "uuid12345", "pages/login/login", 280);
+        System.out.print(wxResp.toString());
 
     }
 
